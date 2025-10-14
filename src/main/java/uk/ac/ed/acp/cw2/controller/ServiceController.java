@@ -1,17 +1,13 @@
 package uk.ac.ed.acp.cw2.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
-import uk.ac.ed.acp.cw2.data.RuntimeEnvironment;
+import uk.ac.ed.acp.cw2.dto.*;
 
 import java.net.URL;
-import java.time.Instant;
 
 /**
  * Controller class that handles various HTTP endpoints for the application.
@@ -41,5 +37,15 @@ public class ServiceController {
         return "s2524342";
     }
 
+    @PostMapping("/distanceTo")
+    public ResponseEntity<Double> distanceTo(@RequestBody PositionsDto positions) {
+        PositionDto position1 = positions.getPosition1();
+        PositionDto position2 = positions.getPosition2();
 
+        double dx = position1.getLng() - position2.getLng();
+        double dy = position1.getLat() - position2.getLat();
+        double distance = Math.sqrt(dx * dx + dy * dy);
+
+        return ResponseEntity.ok(distance);
+    }
 }
