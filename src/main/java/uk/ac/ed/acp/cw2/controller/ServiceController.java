@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.ed.acp.cw2.dto.*;
+import uk.ac.ed.acp.cw2.service.PositionService;
 
 import java.net.URL;
 
@@ -39,13 +40,39 @@ public class ServiceController {
 
     @PostMapping("/distanceTo")
     public ResponseEntity<Double> distanceTo(@RequestBody PositionsDto positions) {
+        //catch an empty request
+        if (positions == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        //catch bad arguments
         PositionDto position1 = positions.getPosition1();
         PositionDto position2 = positions.getPosition2();
+        if (position1 == null || position2 == null) {
+            return ResponseEntity.badRequest().build();
+        }
 
-        double dx = position1.getLng() - position2.getLng();
-        double dy = position1.getLat() - position2.getLat();
-        double distance = Math.sqrt(dx * dx + dy * dy);
-
+        //calculate and return the euclidian distance between the two positions
+        double distance = PositionService.distance(position1, position2);
         return ResponseEntity.ok(distance);
+    }
+
+    @PostMapping("/isCloseTo")
+    public ResponseEntity<Boolean> isCloseTo(@RequestBody PositionsDto positions) {
+        //catch an empty request
+        if (positions == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        //catch bad arguments
+        PositionDto position1 = positions.getPosition1();
+        PositionDto position2 = positions.getPosition2();
+        if (position1 == null || position2 == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        //calculate and return if the two distances are close to each other (distance < 0.00015)
+        boolean isClose = PositionService.isCloseTo(position1, position2);
+        return ResponseEntity.ok(isClose);
     }
 }
