@@ -79,4 +79,17 @@ public class ServiceController {
         PositionDto nextPosition = PositionService.nextPosition(request.getStart(), request.getAngle());
         return ResponseEntity.ok(nextPosition);
     }
+
+    @PostMapping("/isInRegion")
+    public ResponseEntity<Boolean> isInRegion(@RequestBody IsInRegionDto request) {
+        if(!CheckValidService.checkValidIsInRegion(request)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        PositionDto position = request.getPosition();
+        RegionDto region = request.getRegion();
+
+        boolean isInRegion = PositionService.isInRegion(position, region);
+        return ResponseEntity.ok(isInRegion);
+    }
 }

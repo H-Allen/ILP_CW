@@ -2,6 +2,9 @@ package uk.ac.ed.acp.cw2.service;
 
 import org.springframework.stereotype.Service;
 import uk.ac.ed.acp.cw2.dto.PositionDto;
+import uk.ac.ed.acp.cw2.dto.RegionDto;
+
+import java.util.List;
 
 @Service
 public class PositionService {
@@ -32,5 +35,35 @@ public class PositionService {
         nextPosition.setLng(next_lng);
         nextPosition.setLat(next_lat);
         return nextPosition;
+    }
+
+    public static boolean isInRegion(PositionDto point, RegionDto region) {
+        List<PositionDto> vertices = region.getVertices();
+        int size = vertices.size();
+
+        boolean isInside = false;
+
+        for (int i = 0, j = size - 1; i < size; j = i++) {
+            //get the current and previous vertex coordinates
+            double currentX = vertices.get(i).getLng();
+            double currentY = vertices.get(i).getLat();
+            double previousX = vertices.get(j).getLng();
+            double previousY = vertices.get(j).getLat();
+
+            //check if the point lies vertically between the two points
+            boolean isBetween = (currentY > point.getLat() != previousY > point.getLat());
+
+            //if it does lie between vertically calculate the longitude of the intersection
+            if (isBetween) {
+                //y = mx + c
+                double gradient = (currentX - previousX) / (currentY - previousY);
+                double longitudeIntersection = previousX + gradient * (point.getLat() - previousY);
+
+                if (longitudeIntersection > point.getLng()) {
+                    isInside = !isInside;
+                }
+            }
+        }
+        return isInside;
     }
 }
