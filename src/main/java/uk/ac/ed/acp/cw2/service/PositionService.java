@@ -16,4 +16,21 @@ public class PositionService {
     public static boolean isCloseTo(PositionDto position1, PositionDto position2) {
         return (distance(position1, position2) < 0.00015);
     }
+
+    //calculate the next position based on angle and start position
+    public static PositionDto nextPosition(PositionDto position, double angle) {
+        //declare the step size as per the spec + angle
+        final double step = 0.00015;
+        double angleInRads = Math.toRadians(angle);
+
+        //calculate the next position
+        double next_lng = position.getLng() + step * Math.cos(angleInRads);
+        double next_lat = position.getLat() + step * Math.sin(angleInRads);
+
+        //create the next position object and return the position as this
+        PositionDto nextPosition = new PositionDto();
+        nextPosition.setLng(next_lng);
+        nextPosition.setLat(next_lat);
+        return nextPosition;
+    }
 }

@@ -1,17 +1,27 @@
 package uk.ac.ed.acp.cw2.dto;
 
 public class PositionDto {
-    private double lng;
-    private double lat;
+    private Double lng;
+    private Double lat;
 
     //Constructor
-    public PositionDto() {}
+    public PositionDto() {
+    }
 
-    //getters
-    public double getLng() {return lng;}
-    public double getLat() {return lat;}
+    //getters and setters
+    public Double getLng() {
+        return lng;
+    }
 
-    //setters
-    public void setLng(double lng) {this.lng = lng;}
-    public void setLat(double lat) {this.lat = lat;}
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
 }
