@@ -11,6 +11,4 @@ import java.net.URL;
 @Configuration
 @EnableScheduling
 public class IlpRestServiceConfig {
-
-
 }

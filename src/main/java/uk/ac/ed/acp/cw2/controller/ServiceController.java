@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.ed.acp.cw2.dto.*;
+import uk.ac.ed.acp.cw2.dto.request.IsInRegionRequest;
+import uk.ac.ed.acp.cw2.dto.request.NextPositionRequest;
+import uk.ac.ed.acp.cw2.dto.request.PositionRequest;
 import uk.ac.ed.acp.cw2.service.*;
 
 import java.net.URL;
@@ -39,15 +42,15 @@ public class ServiceController {
     }
 
     @PostMapping("/distanceTo")
-    public ResponseEntity<Double> distanceTo(@RequestBody PositionsDto request) {
+    public ResponseEntity<Double> distanceTo(@RequestBody PositionRequest request) {
         //catch an empty request
         if (!CheckValidService.checkValidPositions(request)) {
             return ResponseEntity.badRequest().build();
         }
 
         //catch bad arguments
-        PositionDto position1 = request.getPosition1();
-        PositionDto position2 = request.getPosition2();
+        Position position1 = request.getPosition1();
+        Position position2 = request.getPosition2();
 
         //calculate and return the Euclidean distance between the two positions
         double distance = PositionService.distance(position1, position2);
@@ -55,39 +58,42 @@ public class ServiceController {
     }
 
     @PostMapping("/isCloseTo")
-    public ResponseEntity<Boolean> isCloseTo(@RequestBody PositionsDto request) {
-        //catch an empty request
+    public ResponseEntity<Boolean> isCloseTo(@RequestBody PositionRequest request) {
+        //Validate the JSON request
         if (!CheckValidService.checkValidPositions(request)) {
             return ResponseEntity.badRequest().build();
         }
 
-        //catch bad arguments
-        PositionDto position1 = request.getPosition1();
-        PositionDto position2 = request.getPosition2();
+        //If ok get the positions and return true if the distances are close to each other (<0.00015)
+        Position position1 = request.getPosition1();
+        Position position2 = request.getPosition2();
 
-        //calculate and return if the two distances are close to each other (distance < 0.00015)
         boolean isClose = PositionService.isCloseTo(position1, position2);
         return ResponseEntity.ok(isClose);
     }
 
     @PostMapping("/nextPosition")
-    public ResponseEntity<PositionDto> nextPosition(@RequestBody NextPositionDto request) {
+    public ResponseEntity<Position> nextPosition(@RequestBody NextPositionRequest request) {
+        //Validate the JSON request
         if(!CheckValidService.checkValidNextPosition(request)) {
             return ResponseEntity.badRequest().build();
         }
 
-        PositionDto nextPosition = PositionService.nextPosition(request.getStart(), request.getAngle());
+        //If ok return the calculated next position
+        Position nextPosition = PositionService.nextPosition(request.getStart(), request.getAngle());
         return ResponseEntity.ok(nextPosition);
     }
 
     @PostMapping("/isInRegion")
-    public ResponseEntity<Boolean> isInRegion(@RequestBody IsInRegionDto request) {
+    public ResponseEntity<Boolean> isInRegion(@RequestBody IsInRegionRequest request) {
+        //Validate the JSON request
         if(!CheckValidService.checkValidIsInRegion(request)) {
             return ResponseEntity.badRequest().build();
         }
 
-        PositionDto position = request.getPosition();
-        RegionDto region = request.getRegion();
+        //If ok calculate if the position lies within the requested region and return
+        Position position = request.getPosition();
+        Region region = request.getRegion();
 
         boolean isInRegion = PositionService.isInRegion(position, region);
         return ResponseEntity.ok(isInRegion);
