@@ -9,9 +9,12 @@ import uk.ac.ed.acp.cw2.dto.*;
 import uk.ac.ed.acp.cw2.dto.request.IsInRegionRequest;
 import uk.ac.ed.acp.cw2.dto.request.NextPositionRequest;
 import uk.ac.ed.acp.cw2.dto.request.PositionRequest;
+import uk.ac.ed.acp.cw2.dto.request.Query;
 import uk.ac.ed.acp.cw2.service.*;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Controller class that handles various HTTP endpoints for the application.
@@ -97,5 +100,39 @@ public class ServiceController {
 
         boolean isInRegion = PositionService.isInRegion(position, region);
         return ResponseEntity.ok(isInRegion);
+    }
+
+    //Start of Coursework 2 in the Service Controller
+
+    private final DroneService droneService;
+    public ServiceController(DroneService droneService) {
+        this.droneService = droneService;
+    }
+
+    @GetMapping("dronesWithCooling/{state}")
+    public ResponseEntity<List<Integer>> getDronesWithCooling(@PathVariable boolean state) {
+        List<Integer> dronesWithCooling = droneService.getDronesWithCooling(state);
+        return ResponseEntity.ok(dronesWithCooling);
+    }
+
+    @GetMapping("droneDetails/{id}")
+    public ResponseEntity<Drone> getDroneDetails(@PathVariable int id) {
+        Drone drone = droneService.getDroneById(id);
+        if (drone == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(drone);
+    }
+
+    @GetMapping("/queryAsPath/{attribute}/{value}")
+    public ResponseEntity<List<Integer>> getQueryAsPath(@PathVariable String attribute, @PathVariable String value) {
+        List<Integer> result = droneService.getDroneByAttribute(attribute, value);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/query")
+    public ResponseEntity<List<Integer>> query(@RequestBody List<Query> queries) {
+        List<Integer> result = droneService.getDroneByQuery(queries);
+        return ResponseEntity.ok(result);
     }
 }
