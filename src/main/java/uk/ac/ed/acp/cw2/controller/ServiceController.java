@@ -9,11 +9,12 @@ import uk.ac.ed.acp.cw2.dto.*;
 import uk.ac.ed.acp.cw2.dto.request.IsInRegionRequest;
 import uk.ac.ed.acp.cw2.dto.request.NextPositionRequest;
 import uk.ac.ed.acp.cw2.dto.request.PositionRequest;
-import uk.ac.ed.acp.cw2.dto.request.Query;
+import uk.ac.ed.acp.cw2.dto.request.QueryRequest;
+import uk.ac.ed.acp.cw2.dto.response.DeliveryPathResponse;
+import uk.ac.ed.acp.cw2.dto.response.GeoJsonResponse;
 import uk.ac.ed.acp.cw2.service.*;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -110,13 +111,13 @@ public class ServiceController {
     }
 
     @GetMapping("dronesWithCooling/{state}")
-    public ResponseEntity<List<Integer>> getDronesWithCooling(@PathVariable boolean state) {
-        List<Integer> dronesWithCooling = droneService.getDronesWithCooling(state);
+    public ResponseEntity<List<String>> getDronesWithCooling(@PathVariable boolean state) {
+        List<String> dronesWithCooling = droneService.getDronesWithCooling(state);
         return ResponseEntity.ok(dronesWithCooling);
     }
 
     @GetMapping("droneDetails/{id}")
-    public ResponseEntity<Drone> getDroneDetails(@PathVariable int id) {
+    public ResponseEntity<Drone> getDroneDetails(@PathVariable String id) {
         Drone drone = droneService.getDroneById(id);
         if (drone == null) {
             return ResponseEntity.notFound().build();
@@ -125,14 +126,32 @@ public class ServiceController {
     }
 
     @GetMapping("/queryAsPath/{attribute}/{value}")
-    public ResponseEntity<List<Integer>> getQueryAsPath(@PathVariable String attribute, @PathVariable String value) {
-        List<Integer> result = droneService.getDroneByAttribute(attribute, value);
+    public ResponseEntity<List<String>> getQueryAsPath(@PathVariable String attribute, @PathVariable String value) {
+        List<String> result = droneService.getDroneByAttribute(attribute, value);
         return ResponseEntity.ok(result);
     }
 
     @PostMapping("/query")
-    public ResponseEntity<List<Integer>> query(@RequestBody List<Query> queries) {
-        List<Integer> result = droneService.getDroneByQuery(queries);
+    public ResponseEntity<List<String>> query(@RequestBody List<QueryRequest> queries) {
+        List<String> result = droneService.getDroneByQuery(queries);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/queryAvailableDrones")
+    public ResponseEntity<List<String>> queryAvailableDrones(@RequestBody List<MedDispatchRec> queries) {
+        List<String> result = droneService.getAvailableDrones(queries);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/calcDeliveryPath")
+    public ResponseEntity<DeliveryPathResponse> calcDeliveryPath(@RequestBody List<MedDispatchRec> queries) {
+        DeliveryPathResponse result = droneService.calcDeliveryPath(queries);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/calcDeliveryPathAsGeoJson")
+    public ResponseEntity<GeoJsonResponse> calcDeliveryPathAsGeoJson(@RequestBody List<MedDispatchRec> queries) {
+        GeoJsonResponse result = droneService.calcGeoJsonPath(queries);
         return ResponseEntity.ok(result);
     }
 }

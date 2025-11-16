@@ -68,4 +68,27 @@ public class PositionService {
         }
         return isInside;
     }
+
+    public static boolean isPathInRegion(Position pathStart, Position pathEnd, List<Region> regions) {
+        int intermediatePoints = 20;
+        for (int i = 0; i <= intermediatePoints; i++) {
+            double fraction = (double) i / intermediatePoints;
+            Position intermediate = interpolate(pathStart, pathEnd, fraction);
+
+            if (PathFindingService.isInRestrictedArea(intermediate, regions)) {
+                return true;  // Found a restricted area on the path
+            }
+        }
+        return false;
+    }
+
+    public static Position interpolate(Position start, Position end, double fraction) {
+        double lat = start.getLat() + (end.getLat() - start.getLat()) * fraction;
+        double lng = start.getLng() + (end.getLng() - start.getLng()) * fraction;
+        Position position = new Position();
+        position.setLat(lat);
+        position.setLng(lng);
+        return position; // Assuming Position has a constructor accepting lat, lon
+    }
+
 }
