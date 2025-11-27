@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drone Delivery System</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-content">
+        <div class="nav-left">
+            <h1>Drone Delivery</h1>
+            <p>Click anywhere on the map to set delivery location</p>
+        </div>
+        <div class="nav-right">
+            <button id="clearBtn" onclick="clearSelection()">Clear Selection</button>
+        </div>
+    </div>
+    <div id="messageBox" style="display: none;"></div>
+</nav>
+
+<div id="map"></div>
+
+<footer class="footer">
+    <div class="footer-content">
+        <h2>Delivery Details</h2>
+        <form id="deliveryForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Coordinates</label>
+                    <input type="text" id="coordinates" readonly placeholder="Click map to select">
+                </div>
+                <div class="form-group">
+                    <label>Date (optional)</label>
+                    <input type="date" id="date">
+                </div>
+                <div class="form-group">
+                    <label>Time (optional)</label>
+                    <input type="time" id="time">
+                </div>
+                <div class="form-group">
+                    <label>Capacity (kg)</label>
+                    <input type="number" id="capacity" value="1.0" step="0.1" min="0.1">
+                </div>
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" id="cooling">
+                        Cooling
+                    </label>
+                    <label>
+                        <input type="checkbox" id="heating">
+                        Heating
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Max Cost (optional)</label>
+                    <input type="number" id="maxCost" step="0.01" min="0" placeholder="£">
+                </div>
+                <div class="form-group">
+                    <button type="button" id="dispatchBtn" onclick="placeOrder()">Dispatch</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

@@ -21,7 +21,7 @@ public class PathFindingService {
     }
 
     /*
-        A greedy algorithm to find the a path between two given points
+        A greedy algorithm to find a path between two given points
      */
     public List<Position> findBestPath(Position start, Position end) {
         List<Position> path = new ArrayList<>();
@@ -29,7 +29,7 @@ public class PathFindingService {
         Position current = start;
         path.add(current);
 
-        int maxSteps = 10000; // Safety limit to prevent infinite loops
+        int maxSteps = 10000; //Safety limit to prevent infinite loops -> drones were sometimes getting stuck
         int steps = 0;
 
         List<Position> recentVisits = new ArrayList<>();
@@ -65,8 +65,7 @@ public class PathFindingService {
                 path.add(current);
                 steps++;
             } else {
-                // Stuck! Try to move away from restricted area
-                // Just pick any valid direction
+                // Stuck! Try to move away from restricted area in any direction
                 boolean moved = false;
                 for (double angle : DIRECTIONS) {
                     Position candidate = PositionService.nextPosition(current, angle);
@@ -78,7 +77,7 @@ public class PathFindingService {
                     }
                 }
                 if (!moved) {
-                    // Completely stuck, return what we have
+                    //Completely stuck if havent moved - return what we have (hopefully wont get here)
                     break;
                 }
                 steps++;

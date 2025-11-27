@@ -2,6 +2,18 @@ spring:
   application:
     name: IlpTutorial_1
 
+  datasource:
+    url: jdbc:h2:mem:dronedelivery
+    #driverClassName: org.h2.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+
+  h2:
+    console:
+      enabled: true
 
 info:
   app:
@@ -26,6 +38,9 @@ management:
 
 server:
   port: 8080
+  servlet:
+    session:
+      timeout: 30m
 
 
 

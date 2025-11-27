@@ -1,7 +1,6 @@
 package uk.ac.ed.acp.cw2.service;
 
 public class MathService {
-
     public static boolean compareInt(int val1, int val2, String operator) {
         switch (operator) {
             case "=":

@@ -1,8 +1,5 @@
 package uk.ac.ed.acp.cw2.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.stereotype.Service;
 import uk.ac.ed.acp.cw2.dto.*;
 import uk.ac.ed.acp.cw2.dto.DronesForServicePoint.Availability;
@@ -272,6 +269,7 @@ public class DroneService {
 
                 //Calculate the path
                 List<Position> path = pathFindingService.findBestPath(currentPos, delivery.getDelivery());
+                path.add(path.getLast());
 
                 //Set the ID and path of the tempDelivery and add it to the drone deliveries
                 tempDelivery.setDeliveryId(delivery.getId());
@@ -279,8 +277,8 @@ public class DroneService {
                 dronePath.getDeliveries().add(tempDelivery);
 
                 //Calculate the cost of the flight
-                totalMoves += path.size();
-                totalCost += drone.getCapability().getCostPerMove() * path.size() + drone.getCapability().getCostInitial() +  drone.getCapability().getCostFinal();
+                totalMoves += path.size()-1;
+                totalCost += drone.getCapability().getCostPerMove() * (path.size()-1) + drone.getCapability().getCostInitial() +  drone.getCapability().getCostFinal();
 
                 //Set the current position to this delivery
                 currentPos = delivery.getDelivery();
@@ -291,8 +289,8 @@ public class DroneService {
             DeliveryPathResponse.DronePath.Delivery tempDelivery = new DeliveryPathResponse.DronePath.Delivery();
             tempDelivery.setFlightPath(path);
             dronePath.getDeliveries().add(tempDelivery);
-            totalMoves += path.size();
-            totalCost += drone.getCapability().getCostPerMove() * path.size() + drone.getCapability().getCostInitial() +  drone.getCapability().getCostFinal();
+            totalMoves += path.size() - 1;
+            totalCost += drone.getCapability().getCostPerMove() * (path.size() - 1)+ drone.getCapability().getCostInitial() +  drone.getCapability().getCostFinal();
 
             //add the full dronePath object and then do the same for the next drone
             response.getDronePaths().add(dronePath);
@@ -313,7 +311,7 @@ public class DroneService {
      */
     public GeoJsonResponse calcGeoJsonPath(List<MedDispatchRec> medDispatchRecs) {
         //Just used to show the restricted areas when true - useful for debugging
-        boolean debug = true;
+        boolean debug = false;
 
         PathFindingService pathFindingService = new PathFindingService(clientService);
         GeoJsonResponse response = new GeoJsonResponse();
@@ -345,7 +343,7 @@ public class DroneService {
             for(Position position : path) {
                 coordinates.add(List.of(position.getLng(), position.getLat()));
             }
-
+            coordinates.add(List.of(path.getLast().getLng(), path.getLast().getLat()));
             currentPos = medDispatchRec.getDelivery();
         }
 
