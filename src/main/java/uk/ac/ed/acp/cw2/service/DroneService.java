@@ -311,7 +311,7 @@ public class DroneService {
      */
     public GeoJsonResponse calcGeoJsonPath(List<MedDispatchRec> medDispatchRecs) {
         //Just used to show the restricted areas when true - useful for debugging
-        boolean debug = false;
+        boolean debug = true;
 
         PathFindingService pathFindingService = new PathFindingService(clientService);
         GeoJsonResponse response = new GeoJsonResponse();

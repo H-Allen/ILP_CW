@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - Drone Delivery</title>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/account.css">
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-content">
+        <div class="nav-left">
+            <h1>My Account</h1>
+            <p id="userInfo"></p>
+        </div>
+        <div class="nav-right">
+            <button onclick="window.location.href='index.html'">New Order</button>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+</nav>
+
+<div class="account-container">
+    <h2>Order History</h2>
+    <div id="ordersContainer"></div>
+</div>
+
+<script src="scripts/account.js"></script>
+</body>
+</html>

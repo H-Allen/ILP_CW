@@ -1,0 +1,33 @@
+.auth-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 40px;
+    background: #fff;
+    border: 1px solid #ddd;
+}
+.auth-container h1 {
+    margin-bottom: 30px;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+.error {
+    color: #721c24;
+    background: #f8d7da;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #f5c6cb;
+}
+.link {
+    text-align: center;
+    margin-top: 20px;
+}

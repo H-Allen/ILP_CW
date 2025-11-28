@@ -1,10 +1,14 @@
 package uk.ac.ed.acp.cw2.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uk.ac.ed.acp.cw2.data.OrderHistory;
+import uk.ac.ed.acp.cw2.data.User;
 import uk.ac.ed.acp.cw2.dto.*;
 import uk.ac.ed.acp.cw2.dto.request.IsInRegionRequest;
 import uk.ac.ed.acp.cw2.dto.request.NextPositionRequest;
@@ -12,6 +16,8 @@ import uk.ac.ed.acp.cw2.dto.request.PositionRequest;
 import uk.ac.ed.acp.cw2.dto.request.QueryRequest;
 import uk.ac.ed.acp.cw2.dto.response.DeliveryPathResponse;
 import uk.ac.ed.acp.cw2.dto.response.GeoJsonResponse;
+import uk.ac.ed.acp.cw2.repository.OrderRepo;
+import uk.ac.ed.acp.cw2.repository.UserRepo;
 import uk.ac.ed.acp.cw2.service.*;
 
 import java.net.URL;
@@ -22,11 +28,15 @@ import java.util.List;
  * Provides functionality for serving the index page, retrieving a static UUID,
  * and managing key-value pairs through POST requests.
  */
+
 @RestController()
 @RequestMapping("/api/v1")
 public class ServiceController {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceController.class);
+
+    @Autowired
+    private UserService userService;
 
     @Value("${ilp.service.url}")
     public URL serviceUrl;
@@ -144,8 +154,13 @@ public class ServiceController {
     }
 
     @PostMapping("/calcDeliveryPath")
-    public ResponseEntity<DeliveryPathResponse> calcDeliveryPath(@RequestBody List<MedDispatchRec> queries) {
+    public ResponseEntity<DeliveryPathResponse> calcDeliveryPath(
+            @RequestBody List<MedDispatchRec> queries,
+            HttpSession session) {
+
         DeliveryPathResponse result = droneService.calcDeliveryPath(queries);
+        userService.createOrderHistoryFromDelivery(session, queries, result);
+
         return ResponseEntity.ok(result);
     }
 
